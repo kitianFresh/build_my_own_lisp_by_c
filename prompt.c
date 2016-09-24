@@ -1,6 +1,9 @@
 #include<stdio.h>
+#include<stdlib.h>
 
-static char input[2048];
+#include<editline/readline.h>
+#include<editline/history.h>
+
 
 int main(int argc, char **argv) {
 
@@ -8,11 +11,16 @@ int main(int argc, char **argv) {
     puts("Press Ctrl+c to Exit\n");
 
     while (1) {
-        fputs("lispy>", stdout);
+        /* Output our prompt and get input */
+        char *input = readline("lispy> ");
 
-        fgets(input, 2048, stdin);
+        /* Add input to history */
+        add_history(input);
+        
+        /* Readline function strips the trailing newline character from the input, so we need to add this to printf */
+        printf("No you're a %s\n", input);
 
-        printf("No you're a %s", input);
+        free(input);
     }
 
     return 0;
