@@ -3,3 +3,4 @@
 ## A REPL -- read-evalute-print-loop program
  1. sovle the arrow key ^[[D or ^[[C by using libedit, readline and add\_history function;
  2. sudo apt-get install libedit-dev; cc -std=c99 -Wall prompt.c -ledit -o prompt;
+ 3. For the portability of the c program, use \#ifdef, \#else, and #endif preprocessor statements to tell compiler what code should it emit.
