@@ -9,3 +9,6 @@
  1. Add a Polish Notation parser;
  2. To use this lib, download the mpc.c and mpc.h in current directory, include "mpc.h" in your source file;
  3. use 'cc -std=c99 -Wall parsing.c mpc.c -ledit -lm -o parsing' to compile;
+
+## Plumbing
+&emsp;&emsp;In programming we call this *plumbing*. Roughly speaking this is following instructions to try to tie together a bunch of libraries or components, without fully understanding how they work internally.
