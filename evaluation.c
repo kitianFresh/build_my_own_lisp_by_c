@@ -27,6 +27,57 @@ void add_history(char* unused) {}
 #include<editline/history.h>
 #endif
 
+int number_of_nodes(mpc_ast_t* t) {
+    if (t->children_num == 0) { return 1; }
+    if (t->children_num >= 1) {
+        int total = 1;
+        for (int i=0; i < t->children_num; i++) {
+            total += number_of_nodes(t->children[i]);
+        }
+        return total;
+    }
+    return 0;
+}
+
+int number_of_leaves(mpc_ast_t* t) {
+    if (t->children_num == 0) { return 1; }
+    if (t->children_num >= 1) {
+        int leaves = 0;
+        for (int i=0; i < t->children_num; i++) {
+            leaves += number_of_leaves(t->children[i]);
+        }
+        return leaves;
+    }
+    return 1;
+}
+
+int number_of_branches(mpc_ast_t* t) {
+    if (t->children_num == 0) { return 0; }
+    if (t->children_num >= 1) {
+        int branches = t->children_num;
+        for (int i=0; i < t->children_num; i++) {
+            branches += number_of_branches(t->children[i]);
+        }
+        return branches;
+    }
+    return 0;
+}
+
+int most_number_of_children(mpc_ast_t* t) {
+    if (t->children_num == 0) { return 0; }
+    if (t->children_num >= 1) {
+        int max = t->children_num;
+        for (int i=0; i < t->children_num; i++) {
+            int childrens = most_number_of_children(t->children[i]); 
+            if (childrens > max) {
+                max = childrens;
+            }
+        }
+        return max;
+    }
+    return 0;
+}
+
 
 /* Use operator string to see which operation to perform */
 long eval_op(long x, char* op, long y) {
@@ -35,6 +86,7 @@ long eval_op(long x, char* op, long y) {
     if (strcmp(op, "*") == 0) { return x * y; }
     if (strcmp(op, "/") == 0) { return x / y; }
     if (strcmp(op, "%") == 0) { return x % y; }
+    if (strcmp(op, "^") == 0) { return pow(x, y); }
     return 0;
 }
 
@@ -71,7 +123,7 @@ int main(int argc, char **argv) {
     mpca_lang(MPCA_LANG_DEFAULT,
         "                                                                                               \
          number     : /-?[0-9]+/;                                                                       \
-         operator   : '+' | '-' | '*' | '/' | '%';                                                      \
+         operator   : '+' | '-' | '*' | '/' | '%' | '^';                                                \
          expr       : <number> | '(' <operator> <expr>+ ')';                                            \
          lispy      : /^/ <operator> <expr>+ /$/;                                                       \
         ",
@@ -92,6 +144,9 @@ int main(int argc, char **argv) {
             
             long result = eval(r.output);
             printf("%li\n", result);
+            mpc_ast_print(r.output);
+           // pirntf("%li\n", number_of_nodes(r.output), number_of_leaves(r.output),
+             //       number_of_branches(r.ouput), most_number_of_children(r.output));
             mpc_ast_delete(r.output);
         }
         else {
